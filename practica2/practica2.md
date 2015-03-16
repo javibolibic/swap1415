@@ -2,7 +2,7 @@
 
 ##HABILITAR USUARIO ROOT
 
-Para poder autenticarnos como root en maquina1 y maquina2 debemos usar los siguientes comandos:
+Para poder autenticarnos como root en **maquina1** y **maquina2** debemos usar los siguientes comandos:
 
 *ajbolivar@maquina1:~$ sudo su*
 
@@ -19,7 +19,7 @@ Para poder autenticarnos como root en maquina1 y maquina2 debemos usar los sigui
 
 ##CREAR UN FICHERO TAR EN UN EQUIPO REMOTO
 
-En **maquina1** he usado el siguiente comando para copiar el directorio */var/www/html* comprimido en el directorio de usuario de maquina2:
+En **maquina1** he usado el siguiente comando para copiar el directorio */var/www/html* comprimido en el directorio de usuario de **maquina2**:
 
 *root@maquina1:~# tar -czf - /var/www/html/ | ssh 10.0.1.102 'cat > ~/tar.tgz'*
 
