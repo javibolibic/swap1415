@@ -1,6 +1,6 @@
 #PRACTICA 2: 
 
-##HABILITAR USUARIO ROOT
+##1. HABILITAR USUARIO ROOT
 
 Para poder autenticarnos como root en **maquina1** y **maquina2** debemos usar los siguientes comandos:
 
@@ -17,7 +17,7 @@ Para poder autenticarnos como root en **maquina1** y **maquina2** debemos usar l
 *passwd: password updated successfully*
 
 
-##CREAR UN FICHERO TAR EN UN EQUIPO REMOTO
+##2. CREAR UN FICHERO TAR EN UN EQUIPO REMOTO
 
 En **maquina1** he usado el siguiente comando para copiar el directorio */var/www/html* comprimido en el directorio de usuario de **maquina2**:
 
@@ -34,7 +34,7 @@ Verificamos que en la otra máquina se ha creado con:
 
 
 
-##SINCRONIZAR UNA CARPETA EN DOS SERVIDORES
+##3. SINCRONIZAR UNA CARPETA EN DOS SERVIDORES
 
 En **maquina1**, dentro del directorio /var/www/html/ tenemos los archivos hola.html y index.html. Queremos sincronizarlos para que se copien en **maquina2**. Para ello usaremos la herramienta rsync. Esta herramienta permite que solo se copien los archivos que se han modificado, reduciendo así el ancho de banda y el uso de CPU y discos duros. Usaremos el comando:
 
@@ -76,7 +76,7 @@ Verificamos que se han creado los archivos en **maquina2**:
     
 
 
-##ACCESO SIN CONTRASEÑA PARA SSH
+##4. ACCESO SIN CONTRASEÑA PARA SSH
 
 Para conseguir autenticar por ssh sin contraseña he elegido el **tipo de cifrado rsa**, que tarda más en generarse que el tipo dsa, pero para la verificación tarda menos, por lo que es más apropiado.
 
@@ -175,7 +175,7 @@ Procedemos a añadir la clave de **maquina1** a su propio **authorized_keys** pa
 *and check to make sure that only the key(s) you wanted were added.*
 
 
-## PROGRAMAR TAREAS CON CRONTAB
+##5. PROGRAMAR TAREAS CON CRONTAB
 
 Para que se sincronicen los archivos del directorio **/var/www** cada hora entre las dos máquinas debemos modificar el archivo **/etc/crontab**
 
