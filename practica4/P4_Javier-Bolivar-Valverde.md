@@ -29,6 +29,7 @@ Time per request:       4543.735 [ms] (mean)
 Time per request:       45.437 [ms] (mean, across all concurrent requests)
 Transfer rate:          4.51 [Kbytes/sec] received
 ```
+<img src="abmaquina1_1.png"></img>
 
 ####Prueba2:
 ```
@@ -44,6 +45,7 @@ Time per request:       4474.165 [ms] (mean)
 Time per request:       44.742 [ms] (mean, across all concurrent requests)
 Transfer rate:          4.58 [Kbytes/sec] received
 ```
+<img src="abmaquina1_2.png"></img>
 
 ####Prueba3:
 ```
@@ -59,6 +61,7 @@ Time per request:       4513.174 [ms] (mean)
 Time per request:       45.132 [ms] (mean, across all concurrent requests)
 Transfer rate:          4.54 [Kbytes/sec] received
 ```
+<img src="abmaquina1_3.png"></img>
 
 ####Prueba4:
 ```
@@ -74,6 +77,7 @@ Time per request:       4842.340 [ms] (mean)
 Time per request:       48.423 [ms] (mean, across all concurrent requests)
 Transfer rate:          4.23 [Kbytes/sec] received
 ```
+<img src="abmaquina1_4.png"></img>
 
 ####Prueba5:
 ```
@@ -89,6 +93,7 @@ Time per request:       4495.039 [ms] (mean)
 Time per request:       44.950 [ms] (mean, across all concurrent requests)
 Transfer rate:          4.56 [Kbytes/sec] received
 ```
+<img src="abmaquina1_5.png"></img>
 
 
 ###Resultados obtenidos con Apache Benchmark en nginx:
@@ -106,6 +111,7 @@ Time per request:       2383.144 [ms] (mean)
 Time per request:       23.831 [ms] (mean, across all concurrent requests)
 Transfer rate:          8.19 [Kbytes/sec] received
 ```
+<img src="abnginx1_1.png"></img>
 
 ####Prueba2:
 ```
@@ -121,6 +127,7 @@ Time per request:       2387.611 [ms] (mean)
 Time per request:       23.876 [ms] (mean, across all concurrent requests)
 Transfer rate:          8.18 [Kbytes/sec] received
 ```
+<img src="abnginx1_2.png"></img>
 
 ####Prueba3:
 ```
@@ -136,6 +143,7 @@ Time per request:       2382.658 [ms] (mean)
 Time per request:       23.827 [ms] (mean, across all concurrent requests)
 Transfer rate:          8.19 [Kbytes/sec] received
 ```
+<img src="abnginx1_3.png"></img>
 
 ####Prueba4:
 ```
@@ -151,6 +159,7 @@ Time per request:       2376.667 [ms] (mean)
 Time per request:       23.767 [ms] (mean, across all concurrent requests)
 Transfer rate:          8.21 [Kbytes/sec] received
 ```
+<img src="abnginx1_4.png"></img>
 
 ####Prueba5:
 ```
@@ -166,6 +175,7 @@ Time per request:       2387.060 [ms] (mean)
 Time per request:       23.871 [ms] (mean, across all concurrent requests)
 Transfer rate:          8.18 [Kbytes/sec] received
 ```
+<img src="abnginx1_5.png"></img>
 
 
 ###Resultados obtenidos con Apache Benchmark en haproxy:
@@ -183,6 +193,7 @@ Time per request:       2372.516 [ms] (mean)
 Time per request:       23.725 [ms] (mean, across all concurrent requests)
 Transfer rate:          8.64 [Kbytes/sec] received
 ```
+<img src="abhaproxy1_1.png"></img>
 
 ####Prueba2:
 ```
@@ -198,6 +209,7 @@ Time per request:       2382.898 [ms] (mean)
 Time per request:       23.829 [ms] (mean, across all concurrent requests)
 Transfer rate:          8.60 [Kbytes/sec] received
 ```
+<img src="abhaproxy1_2.png"></img>
 
 ####Prueba3:
 ```
@@ -213,6 +225,7 @@ Time per request:       2335.456 [ms] (mean)
 Time per request:       23.355 [ms] (mean, across all concurrent requests)
 Transfer rate:          8.78 [Kbytes/sec] received
 ```
+<img src="abhaproxy1_3.png"></img>
 
 ####Prueba4:
 ```
@@ -228,6 +241,7 @@ Time per request:       2411.417 [ms] (mean)
 Time per request:       24.114 [ms] (mean, across all concurrent requests)
 Transfer rate:          8.50 [Kbytes/sec] received
 ```
+<img src="abhaproxy1_4.png"></img>
 
 ####Prueba5:
 ```
@@ -243,6 +257,7 @@ Time per request:       2340.393 [ms] (mean)
 Time per request:       23.404 [ms] (mean, across all concurrent requests)
 Transfer rate:          8.76 [Kbytes/sec] received
 ```
+<img src="abhaproxy1_5.png"></img>
 
 
 ##HTTPERF
