@@ -1,0 +1,5 @@
+##Al asegurar un servidor, ¿qué no debemos hacer?
+a) Eliminar cuentas de usuario no necesarias. Pueden ser aprovechadas por algún hacker malicioso.
+b) Renombrar la cuenta de administrador e invitado.
+**c) No actualizar el sistema operativo. Cada vez se hace más pesado y tiende a ir más lento. (correcta)**
+d) Eliminar servicios de red no necesarios. Pueden representar un agujero de seguridad.

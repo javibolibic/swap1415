@@ -1,0 +1,5 @@
+##Para estimar las necesidades de CPU:
+a) El sistema operativo debe consumir cerca del 2% de la capacidad de procesamiento del sistema.
+**b) El sistema operativo debe consumir cerca del 10% de la capacidad de procesamiento del sistema. (correcta)**
+c) El sistema operativo debe consumir cerca del 30% de la capacidad de procesamiento del sistema.
+d) El sistema operativo debe consumir cerca del 35% de la capacidad de procesamiento del sistema.
