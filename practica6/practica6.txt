@@ -1,0 +1,313 @@
+Práctica 6: Discos en RAID
+Javier Bolívar Valverde
+
+Instalación y montaje del RAID 1 por software
+
+Añadimos dos discos adicionales a maquina1, hay que hacerlo estando la máquina apagada. En mi caso he añadido dos discos de 10GB cada uno.
+Instalamos mdadm:
+
+apt-get install mdadm
+
+Una vez instalado, buscamos información de los discos conectados:
+
+root@maquina1:~# fdisk -l
+
+Disco /dev/sda: 21.5 GB, 21474836480 bytes
+255 cabezas, 63 sectores/pista, 2610 cilindros, 41943040 sectores en total
+Unidades = sectores de 1 * 512 = 512 bytes
+Tamaño de sector (lógico / físico): 512 bytes / 512 bytes
+Tamaño E/S (mínimo/óptimo): 512 bytes / 512 bytes
+Identificador del disco: 0x0009b57a
+
+Dispositivo Inicio    Comienzo      Fin      Bloques  Id  Sistema
+/dev/sda1   *        2048    11003903     5500928   83  Linux
+/dev/sda2        11005950    41940991    15467521    5  Extendida
+/dev/sda5        11005952    12396543      695296   82  Linux swap / Solaris
+/dev/sda6        12398592    41940991    14771200   83  Linux
+
+Disco /dev/sdb: 10.7 GB, 10737418240 bytes
+255 cabezas, 63 sectores/pista, 1305 cilindros, 20971520 sectores en total
+Unidades = sectores de 1 * 512 = 512 bytes
+Tamaño de sector (lógico / físico): 512 bytes / 512 bytes
+Tamaño E/S (mínimo/óptimo): 512 bytes / 512 bytes
+Identificador del disco: 0x00000000
+
+El disco /dev/sdb no contiene una tabla de particiones válida
+
+Disco /dev/sdc: 10.7 GB, 10737418240 bytes
+255 cabezas, 63 sectores/pista, 1305 cilindros, 20971520 sectores en total
+Unidades = sectores de 1 * 512 = 512 bytes
+Tamaño de sector (lógico / físico): 512 bytes / 512 bytes
+Tamaño E/S (mínimo/óptimo): 512 bytes / 512 bytes
+Identificador del disco: 0x00000000
+
+El disco /dev/sdc no contiene una tabla de particiones válida
+
+Procedemos a crear el array RAID 1:
+
+root@maquina1:~# mdadm -C /dev/md0 --level=raid1 --raid-devices=2 /dev/sdb /dev/sdc
+mdadm: Note: this array has metadata at the start and
+    may not be suitable as a boot device.  If you plan to
+    store '/boot' on this device please ensure that
+    your boot-loader understands md/v1.x metadata, or use
+    --metadata=0.90
+Continue creating array? y
+mdadm: Defaulting to version 1.2 metadata
+mdadm: array /dev/md0 started.
+root@maquina1:~# 
+
+Le damos formato al array:
+
+root@maquina1:~# mkfs /dev/md0 
+mke2fs 1.42.9 (4-Feb-2014)
+Etiqueta del sistema de ficheros=
+OS type: Linux
+Tamaño del bloque=4096 (bitácora=2)
+Tamaño del fragmento=4096 (bitácora=2)
+Stride=0 blocks, Stripe width=0 blocks
+655360 inodes, 2619360 blocks
+130968 blocks (5.00%) reserved for the super user
+Primer bloque de datos=0
+Número máximo de bloques del sistema de ficheros=2684354560
+80 bloque de grupos
+32768 bloques por grupo, 32768 fragmentos por grupo
+8192 nodos-i por grupo
+Respaldo del superbloque guardado en los bloques: 
+	32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632
+
+Allocating group tables: hecho                           
+Escribiendo las tablas de nodos-i: hecho                           
+Escribiendo superbloques y la información contable del sistema de ficheros:  0/8hecho
+
+root@maquina1:~# 
+
+Montamos el RAID en una carpeta del sistema:
+
+root@maquina1:~# mkdir /datos
+root@maquina1:~# mount /dev/md0 /datos/
+root@maquina1:~#
+
+Verificación del estado del RAID
+
+Procedemos a verificar el estado del RAID:
+
+root@maquina1:~# mdadm --detail /dev/md0 
+/dev/md0:
+        Version : 1.2
+  Creation Time : Tue May 19 17:56:53 2015
+     Raid Level : raid1
+     Array Size : 10477440 (9.99 GiB 10.73 GB)
+  Used Dev Size : 10477440 (9.99 GiB 10.73 GB)
+   Raid Devices : 2
+  Total Devices : 2
+    Persistence : Superblock is persistent
+
+    Update Time : Tue May 19 17:59:54 2015
+          State : clean 
+ Active Devices : 2
+Working Devices : 2
+ Failed Devices : 0
+  Spare Devices : 0
+
+           Name : maquina1:0  (local to host maquina1)
+           UUID : f847e992:ba478315:c80be059:2e929429
+         Events : 17
+
+    Number   Major   Minor   RaidDevice State
+       0       8       16        0      active sync   /dev/sdb
+       1       8       32        1      active sync   /dev/sdc
+root@maquina1:~# 
+
+Montaje automático del RAID
+
+Ya tenemos el RAID configurado, ahora haremos la configuración para el montaje automático al inicio.
+Para ello necesitaremos el UUID del array, es un número de identificación único. Si en un futuro se hiciese otro RAID, podría cambiar md0 por md1 o similar, mientras que el UUID no cambiará:
+
+root@maquina1:~# blkid /dev/md0 
+/dev/md0: UUID="1148e976-057b-405f-ba92-cdcc2744b255" TYPE="ext2" 
+root@maquina1:~#
+
+Ahora modificamos el archivo /etc/fstab para añadir el RAID a la lista de montaje al inicio. Añadimos la siguiente línea al final del archivo:
+
+UUID=1148e976-057b-405f-ba92-cdcc2744b255 /datos        ext2    defaults        0       0
+
+Pasamos ahora a verificar que el montaje automático se hace correctamente. Para ello reiniciamos la máquina y una vez haya arrancado ejecutamos el siguiente comando:
+
+root@maquina1:~# df -h
+S.ficheros     Tamaño Usados  Disp Uso% Montado en
+/dev/sda1        5,1G   1,4G  3,4G  30% /
+none             4,0K      0  4,0K   0% /sys/fs/cgroup
+udev             228M   4,0K  228M   1% /dev
+tmpfs             48M   988K   47M   3% /run
+none             5,0M   4,0K  5,0M   1% /run/lock
+none             238M      0  238M   0% /run/shm
+none             100M      0  100M   0% /run/user
+/dev/sda6         14G    36M   13G   1% /home
+/dev/md127       9,9G    23M  9,4G   1% /datos
+root@maquina1:~# 
+
+Como podemos comprobar, ahora el dispositivo RAID ha cambiado de /dev/md0 a /dev/md127, pero como en su lugar hemos añadido en fstab el UUID, el sistema lo ha montado en /datos sin ningún problema.
+
+Simulación de fallo de disco
+
+Vamos a comprobar el correcto funcionamiento del RAID simulando un fallo hardware de uno de los discos duros:
+
+root@maquina1:~# mdadm --manage --set-faulty /dev/md127 /dev/sdc
+mdadm: set /dev/sdc faulty in /dev/md127
+
+Procedemos a verificar el estado del RAID:
+
+root@maquina1:~# mdadm --detail /dev/md127
+/dev/md127:
+        Version : 1.2
+  Creation Time : Tue May 19 17:56:53 2015
+     Raid Level : raid1
+     Array Size : 10477440 (9.99 GiB 10.73 GB)
+  Used Dev Size : 10477440 (9.99 GiB 10.73 GB)
+   Raid Devices : 2
+  Total Devices : 2
+    Persistence : Superblock is persistent
+
+    Update Time : Tue May 19 18:33:38 2015
+          State : clean, degraded 
+ Active Devices : 1
+Working Devices : 1
+ Failed Devices : 1
+  Spare Devices : 0
+
+           Name : maquina1:0  (local to host maquina1)
+           UUID : f847e992:ba478315:c80be059:2e929429
+         Events : 23
+
+    Number   Major   Minor   RaidDevice State
+       0       8       16        0      active sync   /dev/sdb
+       1       0        0        1      removed
+
+       1       8       32        -      faulty spare   /dev/sdc
+root@maquina1:~# 
+
+Se puede observar que hay un disco que ha fallado porque el campo Failed Devices=1. Vamos a suponer que este disco se ha estropeado. Debemos desconectar el disco del raid con el siguiente comando:
+
+root@maquina1:~# mdadm /dev/md127 -r /dev/sdc
+mdadm: hot removed /dev/sdc from /dev/md127
+root@maquina1:~# mdadm --detail /dev/md127
+/dev/md127:
+        Version : 1.2
+  Creation Time : Tue May 19 17:56:53 2015
+     Raid Level : raid1
+     Array Size : 10477440 (9.99 GiB 10.73 GB)
+  Used Dev Size : 10477440 (9.99 GiB 10.73 GB)
+   Raid Devices : 2
+  Total Devices : 1
+    Persistence : Superblock is persistent
+
+    Update Time : Tue May 19 18:37:23 2015
+          State : clean, degraded 
+ Active Devices : 1
+Working Devices : 1
+ Failed Devices : 0
+  Spare Devices : 0
+
+           Name : maquina1:0  (local to host maquina1)
+           UUID : f847e992:ba478315:c80be059:2e929429
+         Events : 24
+
+    Number   Major   Minor   RaidDevice State
+       0       8       16        0      active sync   /dev/sdb
+       1       0        0        1      removed
+root@maquina1:~# 
+
+Ahora no aparece ningún dispositivo con fallos. Añadimos un disco nuevo con el comando:
+
+root@maquina1:~# mdadm /dev/md127 -a /dev/sdc
+mdadm: added /dev/sdc
+
+Una vez añadido, mdadm empieza a reconstruir el RAID con el nuevo disco. Si vemos los detalles mientras está reconstruyendo, podemos observar un porcentaje que indica el estado de la reconstrucción:
+
+root@maquina1:~# mdadm --detail /dev/md127
+/dev/md127:
+        Version : 1.2
+  Creation Time : Tue May 19 17:56:53 2015
+     Raid Level : raid1
+     Array Size : 10477440 (9.99 GiB 10.73 GB)
+  Used Dev Size : 10477440 (9.99 GiB 10.73 GB)
+   Raid Devices : 2
+  Total Devices : 2
+    Persistence : Superblock is persistent
+
+    Update Time : Tue May 19 18:46:16 2015
+          State : clean, degraded, recovering 
+ Active Devices : 1
+Working Devices : 2
+ Failed Devices : 0
+  Spare Devices : 1
+
+ Rebuild Status : 12% complete
+
+           Name : maquina1:0  (local to host maquina1)
+           UUID : f847e992:ba478315:c80be059:2e929429
+         Events : 28
+
+    Number   Major   Minor   RaidDevice State
+       0       8       16        0      active sync   /dev/sdb
+       2       8       32        1      spare rebuilding   /dev/sdc
+
+root@maquina1:~# mdadm --detail /dev/md127
+/dev/md127:
+        Version : 1.2
+  Creation Time : Tue May 19 17:56:53 2015
+     Raid Level : raid1
+     Array Size : 10477440 (9.99 GiB 10.73 GB)
+  Used Dev Size : 10477440 (9.99 GiB 10.73 GB)
+   Raid Devices : 2
+  Total Devices : 2
+    Persistence : Superblock is persistent
+
+    Update Time : Tue May 19 18:46:39 2015
+          State : clean, degraded, recovering 
+ Active Devices : 1
+Working Devices : 2
+ Failed Devices : 0
+  Spare Devices : 1
+
+ Rebuild Status : 59% complete
+
+           Name : maquina1:0  (local to host maquina1)
+           UUID : f847e992:ba478315:c80be059:2e929429
+         Events : 35
+
+    Number   Major   Minor   RaidDevice State
+       0       8       16        0      active sync   /dev/sdb
+       2       8       32        1      spare rebuilding   /dev/sdc
+
+Una vez terminada la reconstrucción veremos que vuelve a haber 2 dispositivos activos. Ya tenemos nuestro RAID operativo de nuevo.
+
+root@maquina1:~# mdadm --detail /dev/md127
+/dev/md127:
+        Version : 1.2
+  Creation Time : Tue May 19 17:56:53 2015
+     Raid Level : raid1
+     Array Size : 10477440 (9.99 GiB 10.73 GB)
+  Used Dev Size : 10477440 (9.99 GiB 10.73 GB)
+   Raid Devices : 2
+  Total Devices : 2
+    Persistence : Superblock is persistent
+
+    Update Time : Tue May 19 18:47:02 2015
+          State : clean 
+ Active Devices : 2
+Working Devices : 2
+ Failed Devices : 0
+  Spare Devices : 0
+
+           Name : maquina1:0  (local to host maquina1)
+           UUID : f847e992:ba478315:c80be059:2e929429
+         Events : 43
+
+    Number   Major   Minor   RaidDevice State
+       0       8       16        0      active sync   /dev/sdb
+       2       8       32        1      active sync   /dev/sdc
+root@maquina1:~# 
+
+
+
