@@ -55,9 +55,9 @@ Continue creating array? y
 mdadm: Defaulting to version 1.2 metadata
 mdadm: array /dev/md0 started.
 root@maquina1:~# 
-
+```
 Le damos formato al array:
-
+```
 root@maquina1:~# mkfs /dev/md0 
 mke2fs 1.42.9 (4-Feb-2014)
 Etiqueta del sistema de ficheros=
