@@ -1,2 +1,2 @@
 # swap1415
-Repositorio de Práticas de Servidores Web de Altas Prestaciones
+Repositorio de Prácticas de Servidores Web de Altas Prestaciones
